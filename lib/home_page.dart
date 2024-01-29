@@ -20,10 +20,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: SingleChildScrollView(
         //controller: ScrollController(),
-        
+
         child: Column(children: [
           // Virtual Assistant Picture
-        
+
           Stack(
             children: [
               Center(
@@ -41,16 +41,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                        image: AssetImage('assets/images/virtualAssistant.png'))),
+                        image:
+                            AssetImage('assets/images/virtualAssistant.png'))),
               )
             ],
           ),
-        
+
           //Chat bubble
-        
+
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            margin: const EdgeInsets.symmetric(horizontal: 40).copyWith(top: 30),
+            margin:
+                const EdgeInsets.symmetric(horizontal: 40).copyWith(top: 30),
             decoration: BoxDecoration(
                 border: Border.all(color: Pallete.borderColor),
                 borderRadius: const BorderRadius.only(
@@ -68,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-        
+
           Container(
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.all(10.0),
@@ -82,9 +84,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   fontWeight: FontWeight.bold),
             ),
           ),
-        
+
           //Features List
-        
+
           const Column(
             children: [
               FeatureBox(
@@ -92,19 +94,26 @@ class _MyHomePageState extends State<MyHomePage> {
                 headerText: "Chat GPT",
                 descriptionText: "A smarter way to stay organized with ChatGPT",
               ),
-               FeatureBox(
+              FeatureBox(
                 color: Pallete.secondSuggestionBoxColor,
                 headerText: "Dall-E",
-                descriptionText: "Get inspired and stay creative with your personal assistant powered by Dall-E",
+                descriptionText:
+                    "Get inspired and stay creative with your personal assistant powered by Dall-E",
               ),
               FeatureBox(
                 color: Pallete.secondSuggestionBoxColor,
                 headerText: "Smart Voice Asssistant",
-                descriptionText: "Get the best of both worlds with a voice assistant powered by Dall-E and ChatGPT",
+                descriptionText:
+                    "Get the best of both worlds with a voice assistant powered by Dall-E and ChatGPT",
               )
             ],
           )
         ]),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Pallete.firstSuggestionBoxColor,
+        child: const Icon(Icons.mic),
       ),
     );
   }
