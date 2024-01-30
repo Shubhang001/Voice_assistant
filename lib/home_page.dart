@@ -1,6 +1,12 @@
+// ignore_for_file: unused_element
+
+import 'dart:async';
+
 import 'package:chat_bot/feature_box.dart';
 import 'package:chat_bot/pallete.dart';
 import 'package:flutter/material.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -10,6 +16,50 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final speechToText = SpeechToText();
+  String lastWords = '';
+
+  @override
+  void initState() {
+    super.initState();
+    initSpeechtoText();
+  }
+
+  /// This has to happen only once per app
+  Future<void> initSpeechtoText() async {
+    await speechToText.initialize();
+  }
+
+  // Each time to start a speech recognition session
+  Future<void> startListening() async {
+    await speechToText.listen(onResult: _onSpeechResult);
+    setState(() {});
+  }
+
+  /// Manually stop the active speech recognition session
+  /// Note that there are also timeouts that each platform enforces
+  /// and the SpeechToText plugin supports setting timeouts on the
+  /// listen method.
+  Future<void> stopListening() async {
+    await speechToText.stop();
+    setState(() {});
+  }
+
+  /// This is the callback that the SpeechToText plugin calls when
+  /// the platform returns recognized words.
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    print(result.recognizedWords);
+    setState(() {
+      lastWords = result.recognizedWords;
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    speechToText.stop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,7 +161,19 @@ class _MyHomePageState extends State<MyHomePage> {
         ]),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          if (await speechToText.hasPermission && speechToText.isNotListening) {
+            await startListening();
+          }
+          if (await speechToText.hasPermission && speechToText.isListening) {
+            Timer(const Duration(seconds: 5), () {
+              stopListening();
+            });
+          }
+          if (await speechToText.hasPermission == false) {
+            initSpeechtoText();
+          }
+        },
         backgroundColor: Pallete.firstSuggestionBoxColor,
         child: const Icon(Icons.mic),
       ),
