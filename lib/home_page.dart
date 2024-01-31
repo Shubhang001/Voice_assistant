@@ -18,6 +18,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final speechToText = SpeechToText();
   String lastWords = '';
+  int f = 0;
 
   @override
   void initState() {
@@ -40,10 +41,14 @@ class _MyHomePageState extends State<MyHomePage> {
   /// Note that there are also timeouts that each platform enforces
   /// and the SpeechToText plugin supports setting timeouts on the
   /// listen method.
-  Future<void> stopListening() async {
-    await speechToText.stop();
-    setState(() {});
-  }
+  // Future<void> stopListening() async {
+  //   Timer(Duration(seconds: 15), () async {
+  //     print("Stoped recording");
+  //     await speechToText.stop();
+  //   });
+
+  //   setState(() {});
+  // }
 
   /// This is the callback that the SpeechToText plugin calls when
   /// the platform returns recognized words.
@@ -162,14 +167,18 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          f++;
           if (await speechToText.hasPermission && speechToText.isNotListening) {
             await startListening();
           }
-          if (await speechToText.hasPermission && speechToText.isListening) {
-            Timer(const Duration(seconds: 5), () {
-              stopListening();
-            });
-          }
+          // if (await speechToText.hasPermission &&
+          //     speechToText.isListening &&
+          //     f % 2 == 0) {
+          //   print("Timer stoped");
+          //   Timer(const Duration(seconds: 5), () {
+          //     stopListening();
+          //   });
+          // }
           if (await speechToText.hasPermission == false) {
             initSpeechtoText();
           }
