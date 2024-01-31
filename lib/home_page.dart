@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:chat_bot/feature_box.dart';
+import 'package:chat_bot/openai_service.dart';
 import 'package:chat_bot/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
@@ -18,7 +19,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final speechToText = SpeechToText();
   String lastWords = '';
-  int f = 0;
+  final OpenAIService openAIService = OpenAIService();
 
   @override
   void initState() {
@@ -167,10 +168,13 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          f++;
           if (await speechToText.hasPermission && speechToText.isNotListening) {
             await startListening();
           }
+          Timer(const Duration(seconds: 6), () async {
+            print("lastword = $lastWords");
+            await openAIService.isArtPromptAPI(lastWords);
+          });
           // if (await speechToText.hasPermission &&
           //     speechToText.isListening &&
           //     f % 2 == 0) {

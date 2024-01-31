@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 class OpenAIService {
   Future<String> isArtPromptAPI(String prompt) async {
     try {
+      
       final res = await http.post(
           Uri.parse('https://api.openai.com/v1/chat/completions'),
           headers: {
@@ -18,7 +19,7 @@ class OpenAIService {
               {
                 "role": "user",
                 "content":
-                    "Does this message want to generate an AI picture, image , art or anything similar? $prompt . Simply answer with a yes or no."
+                    "Does this message want to generate an AI picture,image,art or anything similar? $prompt.yes or no."
               }
             ]
           }));
