@@ -1,0 +1,1 @@
+const openAPI= "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";
