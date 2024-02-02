@@ -168,6 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          print("pressed");
           if (await speechToText.hasPermission && speechToText.isNotListening) {
             await startListening();
           }
