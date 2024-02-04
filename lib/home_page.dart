@@ -127,30 +127,38 @@ class _MyHomePageState extends State<MyHomePage> {
 
           //Chat bubble
 
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            margin:
-                const EdgeInsets.symmetric(horizontal: 40).copyWith(top: 30),
-            decoration: BoxDecoration(
-                border: Border.all(color: Pallete.borderColor),
-                borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(16),
-                    bottomRight: Radius.circular(16),
-                    bottomLeft: Radius.circular(16))),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: Text(
-                generatedContent == null ? "Good Morning, what task can I do for you?": generatedContent!,
-                style: TextStyle(
-                    color: Pallete.mainFontColor,
-                    fontSize: generatedContent == null ? 18 : 15,
-                    fontFamily: 'Cera Pro'),
+          Visibility(
+            visible: generatedImageUrl == null,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 40).copyWith(top: 30),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Pallete.borderColor),
+                  borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(16),
+                      bottomRight: Radius.circular(16),
+                      bottomLeft: Radius.circular(16))),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Text(
+                  generatedContent == null
+                      ? "Good Morning, what task can I do for you?"
+                      : generatedContent!,
+                  style: TextStyle(
+                      color: Pallete.mainFontColor,
+                      fontSize: generatedContent == null ? 18 : 15,
+                      fontFamily: 'Cera Pro'),
+                ),
               ),
             ),
           ),
 
+          //Image presenting
+          if (generatedImageUrl != null) Image.network(generatedImageUrl!),
+
           Visibility(
-            visible: generatedContent == null,
+            visible: generatedContent == null && generatedImageUrl == null,
             child: Container(
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.all(10.0),
@@ -169,13 +177,14 @@ class _MyHomePageState extends State<MyHomePage> {
           //Features List
 
           Visibility(
-            visible: generatedContent == null,
+            visible: generatedContent == null && generatedImageUrl == null,
             child: const Column(
               children: [
                 FeatureBox(
                   color: Pallete.firstSuggestionBoxColor,
                   headerText: "Chat GPT",
-                  descriptionText: "A smarter way to stay organized with ChatGPT",
+                  descriptionText:
+                      "A smarter way to stay organized with ChatGPT",
                 ),
                 FeatureBox(
                   color: Pallete.secondSuggestionBoxColor,
