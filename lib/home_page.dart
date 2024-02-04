@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:chat_bot/feature_box.dart';
 import 'package:chat_bot/openai_service.dart';
 import 'package:chat_bot/pallete.dart';
@@ -24,6 +25,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final FlutterTts flutterTts = FlutterTts();
   String? generatedContent;
   String? generatedImageUrl;
+  int start = 200;
+  int delay = 200;
 
   @override
   void initState() {
@@ -92,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Allen"),
+        title: BounceInDown(child: const Text("Allen")),
         centerTitle: true,
         leading: const Icon(Icons.menu),
       ),
@@ -102,53 +105,57 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(children: [
           // Virtual Assistant Picture
 
-          Stack(
-            children: [
-              Center(
-                child: Container(
-                  height: 120,
-                  width: 120,
-                  margin: const EdgeInsets.only(top: 4),
-                  decoration: const BoxDecoration(
-                      color: Pallete.assistantCircleColor,
-                      shape: BoxShape.circle),
+          ZoomIn(
+            child: Stack(
+              children: [
+                Center(
+                  child: Container(
+                    height: 120,
+                    width: 120,
+                    margin: const EdgeInsets.only(top: 4),
+                    decoration: const BoxDecoration(
+                        color: Pallete.assistantCircleColor,
+                        shape: BoxShape.circle),
+                  ),
                 ),
-              ),
-              Container(
-                height: 123,
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        image:
-                            AssetImage('assets/images/virtualAssistant.png'))),
-              )
-            ],
+                Container(
+                  height: 123,
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image:
+                              AssetImage('assets/images/virtualAssistant.png'))),
+                )
+              ],
+            ),
           ),
 
           //Chat bubble
 
-          Visibility(
-            visible: generatedImageUrl == null,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 40).copyWith(top: 30),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Pallete.borderColor),
-                  borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(16),
-                      bottomRight: Radius.circular(16),
-                      bottomLeft: Radius.circular(16))),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Text(
-                  generatedContent == null
-                      ? "Good Morning, what task can I do for you?"
-                      : generatedContent!,
-                  style: TextStyle(
-                      color: Pallete.mainFontColor,
-                      fontSize: generatedContent == null ? 18 : 15,
-                      fontFamily: 'Cera Pro'),
+          FadeInRight(
+            child: Visibility(
+              visible: generatedImageUrl == null,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 40).copyWith(top: 30),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Pallete.borderColor),
+                    borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(16),
+                        bottomRight: Radius.circular(16),
+                        bottomLeft: Radius.circular(16))),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Text(
+                    generatedContent == null
+                        ? "Good Morning, what task can I do for you?"
+                        : generatedContent!,
+                    style: TextStyle(
+                        color: Pallete.mainFontColor,
+                        fontSize: generatedContent == null ? 18 : 15,
+                        fontFamily: 'Cera Pro'),
+                  ),
                 ),
               ),
             ),
@@ -163,19 +170,21 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Image.network(generatedImageUrl!)),
             ),
 
-          Visibility(
-            visible: generatedContent == null && generatedImageUrl == null,
-            child: Container(
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.all(10.0),
-              margin: const EdgeInsets.only(top: 10, left: 25),
-              child: const Text(
-                "Here are a few features",
-                style: TextStyle(
-                    color: Pallete.mainFontColor,
-                    fontFamily: "Cera pro",
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold),
+          SlideInLeft(
+            child: Visibility(
+              visible: generatedContent == null && generatedImageUrl == null,
+              child: Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.all(10.0),
+                margin: const EdgeInsets.only(top: 10, left: 25),
+                child: const Text(
+                  "Here are a few features",
+                  style: TextStyle(
+                      color: Pallete.mainFontColor,
+                      fontFamily: "Cera pro",
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
@@ -184,69 +193,81 @@ class _MyHomePageState extends State<MyHomePage> {
 
           Visibility(
             visible: generatedContent == null && generatedImageUrl == null,
-            child: const Column(
+            child: Column(
               children: [
-                FeatureBox(
-                  color: Pallete.firstSuggestionBoxColor,
-                  headerText: "Chat GPT",
-                  descriptionText:
-                      "A smarter way to stay organized with ChatGPT",
+                SlideInLeft(
+                  delay: Duration(milliseconds: start),
+                  child: const FeatureBox(
+                    color: Pallete.firstSuggestionBoxColor,
+                    headerText: "Chat GPT",
+                    descriptionText:
+                        "A smarter way to stay organized with ChatGPT",
+                  ),
                 ),
-                FeatureBox(
-                  color: Pallete.secondSuggestionBoxColor,
-                  headerText: "Dall-E",
-                  descriptionText:
-                      "Get inspired and stay creative with your personal assistant powered by Dall-E",
+                SlideInLeft(
+                  delay: Duration(milliseconds: start + delay),
+                  child: const FeatureBox(
+                    color: Pallete.secondSuggestionBoxColor,
+                    headerText: "Dall-E",
+                    descriptionText:
+                        "Get inspired and stay creative with your personal assistant powered by Dall-E",
+                  ),
                 ),
-                FeatureBox(
-                  color: Pallete.secondSuggestionBoxColor,
-                  headerText: "Smart Voice Asssistant",
-                  descriptionText:
-                      "Get the best of both worlds with a voice assistant powered by Dall-E and ChatGPT",
+                SlideInLeft(
+                  delay: Duration(milliseconds: start + 2 * delay),
+                  child: const FeatureBox(
+                    color: Pallete.secondSuggestionBoxColor,
+                    headerText: "Smart Voice Asssistant",
+                    descriptionText:
+                        "Get the best of both worlds with a voice assistant powered by Dall-E and ChatGPT",
+                  ),
                 )
               ],
             ),
           )
         ]),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          print("pressed");
-          if (await speechToText.hasPermission && speechToText.isNotListening) {
-            await startListening();
-          }
-          Timer(const Duration(seconds: 6), () async {
-            print("lastword = $lastWords");
-            final speech = await openAIService.isArtPromptAPI(lastWords);
-            if (speech.contains('https')) {
-              generatedContent = null;
-              generatedImageUrl = speech;
-              setState(() {});
-            } else {
-              generatedContent = speech;
-              generatedImageUrl = null;
-              await systemSpeak(speech);
-              setState(() {});
+      floatingActionButton: ZoomIn(
+        delay: Duration(milliseconds: start + 3 * delay),
+        child: FloatingActionButton(
+          onPressed: () async {
+            print("pressed");
+            if (await speechToText.hasPermission && speechToText.isNotListening) {
+              await startListening();
             }
-
-            print(speech);
-          });
-          // if (await speechToText.hasPermission &&
-          //     speechToText.isListening &&
-          //     f % 2 == 0) {
-          //   print("Timer stoped");
-          //   Timer(const Duration(seconds: 5), () {
-          //     stopListening();
-          //   });
-          // }
-          if (await speechToText.hasPermission == false) {
-            initSpeechtoText();
-          }
-        },
-        backgroundColor: Pallete.firstSuggestionBoxColor,
-        child: speechToText.isListening
-            ? const Icon(Icons.stop)
-            : const Icon(Icons.mic),
+            Timer(const Duration(seconds: 6), () async {
+              print("lastword = $lastWords");
+              final speech = await openAIService.isArtPromptAPI(lastWords);
+              if (speech.contains('https')) {
+                generatedContent = null;
+                generatedImageUrl = speech;
+                setState(() {});
+              } else {
+                generatedContent = speech;
+                generatedImageUrl = null;
+                await systemSpeak(speech);
+                setState(() {});
+              }
+        
+              print(speech);
+            });
+            // if (await speechToText.hasPermission &&
+            //     speechToText.isListening &&
+            //     f % 2 == 0) {
+            //   print("Timer stoped");
+            //   Timer(const Duration(seconds: 5), () {
+            //     stopListening();
+            //   });
+            // }
+            if (await speechToText.hasPermission == false) {
+              initSpeechtoText();
+            }
+          },
+          backgroundColor: Pallete.firstSuggestionBoxColor,
+          child: speechToText.isListening
+              ? const Icon(Icons.stop)
+              : const Icon(Icons.mic),
+        ),
       ),
     );
   }
