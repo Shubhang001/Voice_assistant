@@ -75,6 +75,7 @@ class OpenAIService {
           'role': 'assistant',
           'content': content,
         });
+        return content;
       }
       return 'An internal error occured';
     } catch (e) {

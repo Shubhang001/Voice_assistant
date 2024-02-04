@@ -174,7 +174,8 @@ class _MyHomePageState extends State<MyHomePage> {
           }
           Timer(const Duration(seconds: 6), () async {
             print("lastword = $lastWords");
-            await openAIService.isArtPromptAPI(lastWords);
+            final speech = await openAIService.isArtPromptAPI(lastWords);
+            print(speech);
           });
           // if (await speechToText.hasPermission &&
           //     speechToText.isListening &&
