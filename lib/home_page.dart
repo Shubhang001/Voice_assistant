@@ -6,6 +6,7 @@ import 'package:chat_bot/feature_box.dart';
 import 'package:chat_bot/openai_service.dart';
 import 'package:chat_bot/pallete.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
@@ -20,12 +21,19 @@ class _MyHomePageState extends State<MyHomePage> {
   final speechToText = SpeechToText();
   String lastWords = '';
   final OpenAIService openAIService = OpenAIService();
+  final FlutterTts flutterTts = FlutterTts();
+
 
   @override
   void initState() {
     super.initState();
     initSpeechtoText();
+    initTexttoSpeech();
   }
+
+
+  //Speech to text Function
+
 
   /// This has to happen only once per app
   Future<void> initSpeechtoText() async {
@@ -59,11 +67,31 @@ class _MyHomePageState extends State<MyHomePage> {
       lastWords = result.recognizedWords;
     });
   }
+  
+  //Speech to Text ends here
+
+
+  //Text to speech functions
+
+
+  
+  Future<void> initTexttoSpeech() async {
+    await speechToText.initialize();
+  }
+
+ Future<void> systemSpeak(String content) async{
+  await flutterTts.speak(content);
+ }
+
+
+
+  //Dispose function is same for both
 
   @override
   void dispose() {
     super.dispose();
     speechToText.stop();
+    flutterTts.stop();
   }
 
   @override
@@ -175,6 +203,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Timer(const Duration(seconds: 6), () async {
             print("lastword = $lastWords");
             final speech = await openAIService.isArtPromptAPI(lastWords);
+            await systemSpeak(speech);
             print(speech);
           });
           // if (await speechToText.hasPermission &&

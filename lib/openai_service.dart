@@ -70,7 +70,7 @@ class OpenAIService {
         String content =
             jsonDecode(res.body)['choices'][0]['message']['content'];
         content = content.trim();
-        
+
         messages.add({
           'role': 'assistant',
           'content': content,
@@ -84,6 +84,38 @@ class OpenAIService {
   }
 
   Future<String> dallEAPI(String prompt) async {
-    return 'ChatGPT';
+    messages.add({
+      'role': 'user',
+      'content': prompt,
+    });
+    try {
+      final res = await http.post(
+          Uri.parse('https://api.openai.com/v1/images/generations'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $openAPI'
+          },
+          body: jsonEncode({
+            "model": "dall-e-3",
+            "prompt": prompt,
+            "n": 1,
+            "size": "1024x1024"
+          }));
+      print(res.body);
+      if (res.statusCode == 200) {
+        print("Result recieved correctly");
+        String content = jsonDecode(res.body)['data'][0]['url'];
+        content = content.trim();
+
+        messages.add({
+          'role': 'assistant',
+          'content': content,
+        });
+        return content;
+      }
+      return 'An internal error occured';
+    } catch (e) {
+      return e.toString();
+    }
   }
 }
