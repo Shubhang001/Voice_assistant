@@ -155,10 +155,13 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
 
           //Image presenting
-          if (generatedImageUrl != null) Padding(
-            padding: const EdgeInsets.all(13.0),
-            child: ClipRRect(borderRadius: BorderRadius.circular(20), child: Image.network(generatedImageUrl!)),
-          ),
+          if (generatedImageUrl != null)
+            Padding(
+              padding: const EdgeInsets.all(13.0),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.network(generatedImageUrl!)),
+            ),
 
           Visibility(
             visible: generatedContent == null && generatedImageUrl == null,
@@ -241,7 +244,9 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         },
         backgroundColor: Pallete.firstSuggestionBoxColor,
-        child: speechToText.isListening? const Icon( Icons.stop ): const Icon(Icons.mic),
+        child: speechToText.isListening
+            ? const Icon(Icons.stop)
+            : const Icon(Icons.mic),
       ),
     );
   }
