@@ -11,7 +11,7 @@ class OpenAIService {
           Uri.parse('https://api.openai.com/v1/chat/completions'),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer $openAPI'
+            'Authorization': 'Bearer $openAPI1'
           },
           body: jsonEncode({
             "model": "gpt-3.5-turbo",
@@ -19,7 +19,7 @@ class OpenAIService {
               {
                 "role": "user",
                 "content":
-                    "Does this message want to generate an AI picture,image,art or anything similar? $prompt.yes or no."
+                    "Does this message want to generate an AI picture,image,art or anything similar? $prompt. Please answer in yes or no."
               }
             ]
           }));
