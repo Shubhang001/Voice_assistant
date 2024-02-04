@@ -22,7 +22,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String lastWords = '';
   final OpenAIService openAIService = OpenAIService();
   final FlutterTts flutterTts = FlutterTts();
-
+  String? generatedContent;
+  String? generatedImageUrl;
 
   @override
   void initState() {
@@ -31,9 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
     initTexttoSpeech();
   }
 
-
   //Speech to text Function
-
 
   /// This has to happen only once per app
   Future<void> initSpeechtoText() async {
@@ -67,23 +66,18 @@ class _MyHomePageState extends State<MyHomePage> {
       lastWords = result.recognizedWords;
     });
   }
-  
-  //Speech to Text ends here
 
+  //Speech to Text ends here
 
   //Text to speech functions
 
-
-  
   Future<void> initTexttoSpeech() async {
     await speechToText.initialize();
   }
 
- Future<void> systemSpeak(String content) async{
-  await flutterTts.speak(content);
- }
-
-
+  Future<void> systemSpeak(String content) async {
+    await flutterTts.speak(content);
+  }
 
   //Dispose function is same for both
 
@@ -143,54 +137,60 @@ class _MyHomePageState extends State<MyHomePage> {
                     topRight: Radius.circular(16),
                     bottomRight: Radius.circular(16),
                     bottomLeft: Radius.circular(16))),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: Text(
-                "Good Morning, what task can I do for you?",
+                generatedContent == null ? "Good Morning, what task can I do for you?": generatedContent!,
                 style: TextStyle(
                     color: Pallete.mainFontColor,
-                    fontSize: 18,
+                    fontSize: generatedContent == null ? 18 : 15,
                     fontFamily: 'Cera Pro'),
               ),
             ),
           ),
 
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.all(10.0),
-            margin: const EdgeInsets.only(top: 10, left: 25),
-            child: const Text(
-              "Here are a few features",
-              style: TextStyle(
-                  color: Pallete.mainFontColor,
-                  fontFamily: "Cera pro",
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold),
+          Visibility(
+            visible: generatedContent == null,
+            child: Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.all(10.0),
+              margin: const EdgeInsets.only(top: 10, left: 25),
+              child: const Text(
+                "Here are a few features",
+                style: TextStyle(
+                    color: Pallete.mainFontColor,
+                    fontFamily: "Cera pro",
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold),
+              ),
             ),
           ),
 
           //Features List
 
-          const Column(
-            children: [
-              FeatureBox(
-                color: Pallete.firstSuggestionBoxColor,
-                headerText: "Chat GPT",
-                descriptionText: "A smarter way to stay organized with ChatGPT",
-              ),
-              FeatureBox(
-                color: Pallete.secondSuggestionBoxColor,
-                headerText: "Dall-E",
-                descriptionText:
-                    "Get inspired and stay creative with your personal assistant powered by Dall-E",
-              ),
-              FeatureBox(
-                color: Pallete.secondSuggestionBoxColor,
-                headerText: "Smart Voice Asssistant",
-                descriptionText:
-                    "Get the best of both worlds with a voice assistant powered by Dall-E and ChatGPT",
-              )
-            ],
+          Visibility(
+            visible: generatedContent == null,
+            child: const Column(
+              children: [
+                FeatureBox(
+                  color: Pallete.firstSuggestionBoxColor,
+                  headerText: "Chat GPT",
+                  descriptionText: "A smarter way to stay organized with ChatGPT",
+                ),
+                FeatureBox(
+                  color: Pallete.secondSuggestionBoxColor,
+                  headerText: "Dall-E",
+                  descriptionText:
+                      "Get inspired and stay creative with your personal assistant powered by Dall-E",
+                ),
+                FeatureBox(
+                  color: Pallete.secondSuggestionBoxColor,
+                  headerText: "Smart Voice Asssistant",
+                  descriptionText:
+                      "Get the best of both worlds with a voice assistant powered by Dall-E and ChatGPT",
+                )
+              ],
+            ),
           )
         ]),
       ),
@@ -203,7 +203,17 @@ class _MyHomePageState extends State<MyHomePage> {
           Timer(const Duration(seconds: 6), () async {
             print("lastword = $lastWords");
             final speech = await openAIService.isArtPromptAPI(lastWords);
-            await systemSpeak(speech);
+            if (speech.contains('https')) {
+              generatedContent = null;
+              generatedImageUrl = speech;
+              setState(() {});
+            } else {
+              generatedContent = speech;
+              generatedImageUrl = null;
+              await systemSpeak(speech);
+              setState(() {});
+            }
+
             print(speech);
           });
           // if (await speechToText.hasPermission &&
